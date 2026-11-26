@@ -7,16 +7,16 @@
   const map = fn => { const m = {}; A.split('').forEach((c, i) => m[c] = fn(i + 1)); return m; };
   const ORD = map(n => n), REV = map(n => 27 - n);
   const CIPHERS = [
-    { id: 'eo',  name: 'English Ordinal',          short: 'Ordinal',    color: '#7cc4ff', table: ORD },
-    { id: 'fr',  name: 'Full Reduction',           short: 'Reduction',  color: '#8ef0b0', table: map(reduceFull) },
-    { id: 'ro',  name: 'Reverse Ordinal',          short: 'Rev Ord',    color: '#ffb86b', table: REV },
-    { id: 'rfr', name: 'Reverse Full Reduction',   short: 'Rev Red',    color: '#ff7eb6', table: map(n => reduceFull(27 - n)) },
-    { id: 'sr',  name: 'Single Reduction',         short: 'Single Red', color: '#b9a3ff', table: map(reduceOnce) },
-    { id: 'rsr', name: 'Reverse Single Reduction', short: 'Rev Single', color: '#f6e27a', table: map(n => reduceOnce(27 - n)) },
-    { id: 'jew', name: 'Jewish',                   short: 'Jewish',     color: '#6ee7e7', table: JEWISH },
-    { id: 'sum', name: 'English (Sumerian)',       short: 'Sumerian',   color: '#ffd27f', table: map(n => n * 6) },
-    { id: 'rsum',name: 'Reverse English (Sumerian)',short: 'Rev Sumer', color: '#ff9f80', table: map(n => (27 - n) * 6) },
-    { id: 'fb',  name: 'Francis Bacon',            short: 'Bacon',      color: '#c7d2fe', caseSensitive: true },
+    { id: 'eo', desc: 'A=1, B=2 … Z=26. The base cipher everything starts from.',  name: 'English Ordinal',          short: 'Ordinal',    color: '#7cc4ff', table: ORD },
+    { id: 'fr', desc: "Each letter's number cut down to one digit: K=11→2, S=19→1, Z=26→8.",  name: 'Full Reduction',           short: 'Reduction',  color: '#8ef0b0', table: map(reduceFull) },
+    { id: 'ro', desc: 'The alphabet backwards: A=26, B=25 … Z=1.',  name: 'Reverse Ordinal',          short: 'Rev Ord',    color: '#ffb86b', table: REV },
+    { id: 'rfr', desc: 'Reverse values cut down to one digit. Detroit Lions = 74 here.', name: 'Reverse Full Reduction',   short: 'Rev Red',    color: '#ff7eb6', table: map(n => reduceFull(27 - n)) },
+    { id: 'sr', desc: 'Like Full Reduction, except S stays 10 (19 → 1+9).',  name: 'Single Reduction',         short: 'Single Red', color: '#b9a3ff', table: map(reduceOnce) },
+    { id: 'rsr', desc: 'Like Reverse Full Reduction, except H stays 10.', name: 'Reverse Single Reduction', short: 'Rev Single', color: '#f6e27a', table: map(n => reduceOnce(27 - n)) },
+    { id: 'jew', desc: 'Old Latin-Hebrew table: A–I = 1–9, K–S = tens, T–Z = hundreds, J=600, V=700, W=900.', name: 'Jewish',                   short: 'Jewish',     color: '#6ee7e7', table: JEWISH },
+    { id: 'sum', desc: 'English Ordinal × 6. A=6, B=12 … Z=156.', name: 'English (Sumerian)',       short: 'Sumerian',   color: '#ffd27f', table: map(n => n * 6) },
+    { id: 'rsum', desc: 'Reverse Ordinal × 6. A=156 … Z=6.',name: 'Reverse English (Sumerian)',short: 'Rev Sumer', color: '#ff9f80', table: map(n => (27 - n) * 6) },
+    { id: 'fb', desc: 'Capitals count: a–z = 1–26, A–Z = 27–52. Spelling and case matter.',  name: 'Francis Bacon',            short: 'Bacon',      color: '#c7d2fe', caseSensitive: true },
   ];
   function value(text, c) {
     let s = 0;

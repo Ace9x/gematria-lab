@@ -3,134 +3,211 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0d12">
+<meta name="theme-color" content="#08080c">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="Gematria calculator, date numerology and a number tracker for sports research.">
+<meta name="apple-mobile-web-app-title" content="Gematria Lab">
+<meta name="description" content="Turn words and dates into numbers, then see which numbers show up in final scores.">
 <title>Joe's Gematria Lab</title>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-word" viewBox="0 0 24 24"><path d="M3.5 18 8 6l4.5 12M5.2 14h5.6M15 10.5c.6-.9 1.6-1.4 2.8-1.4 1.8 0 2.7 1 2.7 2.7V18m0-3.6c-.8-.3-1.6-.4-2.4-.4-1.9 0-3.1.8-3.1 2.1 0 1.2.9 2 2.3 2 1.4 0 2.6-.7 3.2-1.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="15" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="7" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="18" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.2 8.4l2.6 7.3M15.8 8.4l-2.6 7.3M8.4 7h7.2" stroke="currentColor" stroke-width="1.7"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20V12M10 20V6M15 20v-9M20 20V4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1.1" fill="currentColor"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
 <header class="top">
-  <div class="brand"><img src="icon.svg" alt="" class="logo"><div><h1>Joe's Gematria Lab</h1><p>Words → numbers → connect the dots</p></div></div>
+  <div class="brand">
+    <img src="icon.svg" alt="" class="logo" width="36" height="36">
+    <div class="brand-txt"><div class="title">Gematria Lab</div><div class="sub" id="topSub">Words → numbers → connect the dots</div></div>
+  </div>
+  <button id="helpBtn" class="icon-btn" aria-label="Show me around">?</button>
 </header>
 
-<main>
-<!-- CALCULATOR -->
-<section id="tab-calc" class="tab active">
-  <div class="card hero">
-    <label class="lbl" for="phrase">Word or phrase</label>
-    <input id="phrase" class="big" type="text" placeholder="Detroit Lions" autocomplete="off" autocapitalize="words" list="teamlist">
-    <div class="row gap">
-      <input id="findnum" type="number" inputmode="numeric" placeholder="Find a number (e.g. 74)">
-      <button id="saveword" class="btn ghost">+ Compare</button>
+<main id="main">
+<!-- TODAY -->
+<section id="tab-today" class="tab active" aria-label="Today">
+  <div class="hello">
+    <p class="eyebrow" id="todayDow"></p>
+    <h1 id="todayDate" class="display"></h1>
+    <p class="hint" id="todayHol"></p>
+  </div>
+  <h3 class="section-label" style="margin-top:14px">Quick start</h3>
+  <div class="actions">
+    <button class="action" data-qa="word"><span class="a-ic"><svg><use href="#i-word"/></svg></span><span class="a-t"><b>Check a word</b><small>See a name in every cipher</small></span><svg class="chev"><use href="#i-arrow"/></svg></button>
+    <button class="action" data-qa="match"><span class="a-ic"><svg><use href="#i-link"/></svg></span><span class="a-t"><b>Match a final</b><small>Which numbers hit the score</small></span><svg class="chev"><use href="#i-arrow"/></svg></button>
+    <button class="action" data-qa="log"><span class="a-ic"><svg><use href="#i-chart"/></svg></span><span class="a-t"><b>Log a game</b><small>Track what hits and misses</small></span><svg class="chev"><use href="#i-arrow"/></svg></button>
+  </div>
+  <div class="card glow" id="todayNums">
+    <div class="card-head"><h2>Today's numbers</h2><button class="text-btn" data-go="dates">All sums</button></div>
+    <p class="hint">Today's date added up the common ways.</p>
+    <div class="num-grid three" id="todayGrid"></div>
+  </div>
+  <div class="card" id="nextHol"></div>
+  <button class="story" data-qa="example">
+    <span class="story-num">74</span>
+    <span class="story-t"><b>Thanksgiving 2026: Bears 39, Lions 35</b><small>Total 74 = “Detroit Lions” in Reverse Full Reduction. See how it connects →</small></span>
+  </button>
+</section>
+
+<!-- WORDS -->
+<section id="tab-calc" class="tab" aria-label="Words">
+  <div class="page-head"><h1>Words</h1><p class="hint">Type any team, player, holiday or city. Tap a cipher to see the math.</p></div>
+  <div class="card" id="phraseCard">
+    <label class="field-label" for="phrase">Word or phrase</label>
+    <input id="phrase" class="input xl" type="text" placeholder="Detroit Lions" autocomplete="off" autocapitalize="words" list="teamlist" enterkeyhint="done">
+    <div class="field-row">
+      <div class="find"><label class="field-label" for="findnum">Find a number</label><input id="findnum" class="input" type="number" inputmode="numeric" placeholder="e.g. 74"></div>
+      <button id="saveword" class="btn secondary">Add to compare</button>
     </div>
   </div>
   <div id="cipherGrid" class="ciphers"></div>
-  <div id="breakdown" class="card breakdown hidden"></div>
+  <div id="breakdown" class="card hidden"></div>
   <div class="card">
-    <div class="row between"><h2>Compare list</h2><button id="clearwords" class="link">Clear</button></div>
-    <p class="muted small">Tap “+ Compare” to stack words side by side. A number in “Find” lights up every match.</p>
+    <div class="card-head"><h2>Compare</h2><button id="clearwords" class="text-btn">Clear</button></div>
+    <p class="hint">Words side by side. A number in “Find” lights up every match.</p>
     <div class="scroll-x"><table id="cmpTable" class="tbl"></table></div>
   </div>
 </section>
 
 <!-- DATES -->
-<section id="tab-dates" class="tab">
-  <div class="card hero">
-    <label class="lbl" for="dateIn">Date</label>
-    <input id="dateIn" class="big" type="date">
-    <p id="dateLabel" class="muted"></p>
-  </div>
-  <div id="dateGrid" class="dategrid"></div>
-  <div class="card">
-    <h2>Days between two dates</h2>
-    <div class="row gap"><input id="spanA" type="date"><input id="spanB" type="date"></div>
-    <p id="spanOut" class="span-out"></p>
-  </div>
-</section>
-
-<!-- HOLIDAYS -->
-<section id="tab-hol" class="tab">
-  <div class="card hero row between">
-    <div><h2>Holidays</h2><p class="muted small">Word values + date values for the year</p></div>
-    <div class="yearpick"><button id="yPrev" class="btn ghost sq">‹</button><span id="yLbl"></span><button id="yNext" class="btn ghost sq">›</button></div>
-  </div>
-  <div id="holList"></div>
-</section>
-
-<!-- DOTS -->
-<section id="tab-dots" class="tab">
-  <div class="card hero">
-    <div class="row between"><h2>Connect the dots</h2><button id="loadEx" class="link">Thanksgiving example</button></div>
-    <div class="grid2">
-      <div><label class="lbl">Sport</label><select id="sport"><option>NFL</option><option>NCAAF</option><option>NBA</option><option>NCAAB</option><option>WNBA</option><option>MLB</option><option>NHL</option><option>Soccer</option></select></div>
-      <div><label class="lbl">Date</label><input id="gDate" type="date"></div>
-      <div><label class="lbl">Team A (away)</label><input id="tA" type="text" list="teamlist" placeholder="Chicago Bears" autocomplete="off"></div>
-      <div><label class="lbl">Team B (home)</label><input id="tB" type="text" list="teamlist" placeholder="Detroit Lions" autocomplete="off"></div>
-      <div><label class="lbl">Holiday</label><select id="gHol"><option value="">None</option></select></div>
-      <div><label class="lbl">Extra words</label><input id="gExtra" type="text" placeholder="player, city, stadium…" autocomplete="off"></div>
-      <div><label class="lbl">Team A score</label><input id="sA" type="number" inputmode="numeric" placeholder="final"></div>
-      <div><label class="lbl">Team B score</label><input id="sB" type="number" inputmode="numeric" placeholder="final"></div>
+<section id="tab-dates" class="tab" aria-label="Dates">
+  <div class="page-head"><h1>Dates</h1><p class="hint">Any date turned into numbers, plus every holiday.</p></div>
+  <div class="seg" id="datesSeg" role="tablist"><button data-v="date" class="on" role="tab">Any date</button><button data-v="hol" role="tab">Holidays</button></div>
+  <div id="datePane">
+    <div class="card" id="dateKey">
+      <label class="field-label" for="dateIn">Pick a date</label>
+      <input id="dateIn" class="input" type="date">
+      <p id="dateLabel" class="hint strong"></p>
+      <div class="num-grid" id="dateKeyGrid"></div>
     </div>
-    <div class="seg" id="dotsMode"><button data-m="match" class="on">Match a final</button><button data-m="sim">Simulate</button></div>
+    <div class="card">
+      <h2>Every date sum</h2>
+      <p class="hint">How each number is added up.</p>
+      <div id="dateList" class="list"></div>
+    </div>
+    <div class="card">
+      <h2>Days between two dates</h2>
+      <p class="hint">Count the days from one date to another.</p>
+      <div class="field-row two"><input id="spanA" class="input" type="date" aria-label="From"><input id="spanB" class="input" type="date" aria-label="To"></div>
+      <p id="spanOut" class="span-out"></p>
+    </div>
+  </div>
+  <div id="holPane" class="hidden">
+    <div class="card row-between">
+      <div><h2>Holidays</h2><p class="hint">Word and date numbers for each holiday.</p></div>
+      <div class="yearpick"><button id="yPrev" class="icon-btn sm" aria-label="Previous year">‹</button><span id="yLbl"></span><button id="yNext" class="icon-btn sm" aria-label="Next year">›</button></div>
+    </div>
+    <div id="holList"></div>
+  </div>
+</section>
+
+<!-- MATCH -->
+<section id="tab-dots" class="tab" aria-label="Match">
+  <div class="page-head"><h1>Match</h1><p class="hint">Connect the dots between names, the date and the score.</p></div>
+  <div class="seg" id="dotsMode" role="tablist"><button data-m="match" class="on" role="tab">Final score</button><button data-m="sim" role="tab">Before the game</button></div>
+  <div class="card" id="gameCard">
+    <div class="card-head"><h2>The game</h2><button id="loadEx" class="chip-btn">Try Lions example</button></div>
+    <div class="teams">
+      <div><label class="field-label" for="tA">Away team</label><input id="tA" class="input" type="text" list="teamlist" placeholder="Chicago Bears" autocomplete="off"></div>
+      <span class="at">@</span>
+      <div><label class="field-label" for="tB">Home team</label><input id="tB" class="input" type="text" list="teamlist" placeholder="Detroit Lions" autocomplete="off"></div>
+    </div>
+    <div class="field-row two">
+      <div><label class="field-label" for="gDate">Date</label><input id="gDate" class="input" type="date"></div>
+      <div><label class="field-label" for="gHol">Holiday</label><select id="gHol" class="input"><option value="">None</option></select></div>
+    </div>
+    <div class="field-row two" id="scoreRow">
+      <div><label class="field-label" for="sA">Away score</label><input id="sA" class="input score" type="number" inputmode="numeric" placeholder="–"></div>
+      <div><label class="field-label" for="sB">Home score</label><input id="sB" class="input score" type="number" inputmode="numeric" placeholder="–"></div>
+    </div>
+    <details class="more"><summary>More options</summary>
+      <div class="field-row two">
+        <div><label class="field-label" for="sport">Sport</label><select id="sport" class="input"><option>NFL</option><option>NCAAF</option><option>NBA</option><option>NCAAB</option><option>WNBA</option><option>MLB</option><option>NHL</option><option>Soccer</option></select></div>
+        <div><label class="field-label" for="gExtra">Extra words</label><input id="gExtra" class="input" type="text" placeholder="player, city…" autocomplete="off"></div>
+      </div>
+      <p class="hint">Separate extra words with commas.</p>
+    </details>
   </div>
   <div id="dotsOut"></div>
-  <div class="card savebar">
-    <p class="small muted"><span id="pickCount">0</span> number calls picked. Tap any value below to pick it as a call.</p>
-    <button id="saveGame" class="btn primary wide">Save game to Tracker</button>
+  <div class="savebar" id="saveBar">
+    <div class="sb-t"><b id="pickCount">0</b> <span id="pickLbl">calls picked</span><small>Tap any number to pick it</small></div>
+    <button id="saveGame" class="btn primary">Log game</button>
   </div>
 </section>
 
 <!-- TRACKER -->
-<section id="tab-track" class="tab">
-  <div class="card hero">
-    <div class="row between"><h2>What wins, what loses</h2><span id="trkSummary" class="pill"></span></div>
-    <div class="seg" id="statMode"><button data-s="cipher" class="on">By cipher</button><button data-s="method">By method</button><button data-s="target">By target</button></div>
+<section id="tab-track" class="tab" aria-label="Tracker">
+  <div class="page-head"><h1>Tracker</h1><p class="hint">Log your number calls, add the final, see what wins and loses.</p></div>
+  <div class="card glow" id="trkHero">
+    <div class="kpis"><div><span class="kpi" id="kRate">–</span><small>hit rate</small></div><div><span class="kpi" id="kCalls">0</span><small>graded calls</small></div><div><span class="kpi" id="kGames">0</span><small>games</small></div></div>
+    <div class="seg small" id="statMode"><button data-s="cipher" class="on">Cipher</button><button data-s="method">Source</button><button data-s="target">Target</button></div>
     <div id="stats"></div>
   </div>
-  <div class="card">
-    <div class="row between"><h2>Add a game</h2><button id="toggleAdd" class="link">Open</button></div>
-    <div id="addForm" class="hidden">
-      <div class="grid2">
-        <div><label class="lbl">Date</label><input id="mDate" type="date"></div>
-        <div><label class="lbl">Sport</label><select id="mSport"><option>NFL</option><option>NCAAF</option><option>NBA</option><option>NCAAB</option><option>WNBA</option><option>MLB</option><option>NHL</option><option>Soccer</option></select></div>
-        <div><label class="lbl">Team A</label><input id="mA" list="teamlist" type="text"></div>
-        <div><label class="lbl">Team B</label><input id="mB" list="teamlist" type="text"></div>
-        <div><label class="lbl">Team A score</label><input id="mSA" type="number" inputmode="numeric" placeholder="later is ok"></div>
-        <div><label class="lbl">Team B score</label><input id="mSB" type="number" inputmode="numeric" placeholder="later is ok"></div>
-      </div>
-      <label class="lbl">Number calls</label>
-      <div id="mCalls"></div>
-      <button id="mAddCall" class="btn ghost">+ Add call</button>
-      <button id="mSave" class="btn primary wide">Save game</button>
+  <button id="toggleAdd" class="btn primary block">+ Log a game</button>
+  <div id="addForm" class="card hidden">
+    <h2>Log a game</h2><p class="hint">Scores can be added later. Then tap Grade.</p>
+    <div class="field-row two">
+      <div><label class="field-label" for="mDate">Date</label><input id="mDate" class="input" type="date"></div>
+      <div><label class="field-label" for="mSport">Sport</label><select id="mSport" class="input"><option>NFL</option><option>NCAAF</option><option>NBA</option><option>NCAAB</option><option>WNBA</option><option>MLB</option><option>NHL</option><option>Soccer</option></select></div>
+      <div><label class="field-label" for="mA">Away team</label><input id="mA" class="input" list="teamlist" type="text"></div>
+      <div><label class="field-label" for="mB">Home team</label><input id="mB" class="input" list="teamlist" type="text"></div>
+      <div><label class="field-label" for="mSA">Away score</label><input id="mSA" class="input" type="number" inputmode="numeric" placeholder="later"></div>
+      <div><label class="field-label" for="mSB">Home score</label><input id="mSB" class="input" type="number" inputmode="numeric" placeholder="later"></div>
     </div>
+    <label class="field-label">Your number calls</label>
+    <div id="mCalls"></div>
+    <div class="field-row"><button id="mAddCall" class="btn secondary">+ Another call</button><button id="mSave" class="btn primary grow">Save game</button></div>
   </div>
   <div id="games"></div>
-  <div class="card row gap wrap">
-    <button id="expCsv" class="btn ghost">Export CSV</button>
-    <label class="btn ghost">Import CSV<input id="impCsv" type="file" accept=".csv,text/csv" hidden></label>
+  <div class="io">
+    <button id="expCsv" class="btn secondary">Export CSV</button>
+    <label class="btn secondary" tabindex="0">Import CSV<input id="impCsv" type="file" accept=".csv,text/csv" hidden></label>
   </div>
 </section>
 </main>
 
-<p class="disclaimer">Number patterns for research and fun only. Not predictions.</p>
-<footer class="foot">Built by Ace Apps</footer>
+<footer class="foot"><p class="disclaimer">Number patterns for research and fun only. Not predictions.</p><p>Built by Ace Apps</p></footer>
 
-<nav class="tabs">
-  <button data-t="calc" class="on"><span>Aa</span>Calc</button>
-  <button data-t="dates"><span>📅</span>Dates</button>
-  <button data-t="hol"><span>★</span>Holidays</button>
-  <button data-t="dots"><span>⋯</span>Dots</button>
-  <button data-t="track"><span>✓</span>Tracker</button>
+<nav class="tabs" aria-label="Sections">
+  <button data-t="today" class="on"><svg><use href="#i-home"/></svg>Today</button>
+  <button data-t="calc"><svg><use href="#i-word"/></svg>Words</button>
+  <button data-t="dates"><svg><use href="#i-cal"/></svg>Dates</button>
+  <button data-t="dots"><svg><use href="#i-link"/></svg>Match</button>
+  <button data-t="track"><svg><use href="#i-chart"/></svg>Tracker</button>
 </nav>
+
+<div id="sheet" class="sheet" aria-hidden="true"><div class="sheet-bg" data-close></div><div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab"></div><div id="sheetBody"></div><button class="btn secondary block" data-close>Got it</button></div></div>
+
+<div id="tour" class="tour hidden" aria-live="polite">
+  <div class="tour-catch"></div>
+  <div class="tour-spot" id="tourSpot"></div>
+  <div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+    <div class="tour-top"><span class="tour-step" id="tourStep"></span><button class="text-btn" id="tourSkip">Skip</button></div>
+    <h3 id="tourTitle"></h3>
+    <p id="tourText"></p>
+    <div class="tour-nav"><div class="dots" id="tourDots"></div><div class="tour-btns"><button class="btn ghost" id="tourBack">Back</button><button class="btn primary" id="tourNext">Next</button></div></div>
+  </div>
+</div>
+
 <datalist id="teamlist"></datalist>
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status"></div>
 <script src="gematria.js"></script>
 <script src="teams.js"></script>
 <script src="app.js"></script>
+<script src="tour.js"></script>
 </body>
 </html>
