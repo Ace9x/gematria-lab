@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Gematria calculator, date numerology and a number tracker for sports research.">
+<title>Joe's Gematria Lab</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="icon.svg" alt="" class="logo"><div><h1>Joe's Gematria Lab</h1><p>Words → numbers → connect the dots</p></div></div>
+</header>
+
+<main>
+<!-- CALCULATOR -->
+<section id="tab-calc" class="tab active">
+  <div class="card hero">
+    <label class="lbl" for="phrase">Word or phrase</label>
+    <input id="phrase" class="big" type="text" placeholder="Detroit Lions" autocomplete="off" autocapitalize="words" list="teamlist">
+    <div class="row gap">
+      <input id="findnum" type="number" inputmode="numeric" placeholder="Find a number (e.g. 74)">
+      <button id="saveword" class="btn ghost">+ Compare</button>
+    </div>
+  </div>
+  <div id="cipherGrid" class="ciphers"></div>
+  <div id="breakdown" class="card breakdown hidden"></div>
+  <div class="card">
+    <div class="row between"><h2>Compare list</h2><button id="clearwords" class="link">Clear</button></div>
+    <p class="muted small">Tap “+ Compare” to stack words side by side. A number in “Find” lights up every match.</p>
+    <div class="scroll-x"><table id="cmpTable" class="tbl"></table></div>
+  </div>
+</section>
+
+<!-- DATES -->
+<section id="tab-dates" class="tab">
+  <div class="card hero">
+    <label class="lbl" for="dateIn">Date</label>
+    <input id="dateIn" class="big" type="date">
+    <p id="dateLabel" class="muted"></p>
+  </div>
+  <div id="dateGrid" class="dategrid"></div>
+  <div class="card">
+    <h2>Days between two dates</h2>
+    <div class="row gap"><input id="spanA" type="date"><input id="spanB" type="date"></div>
+    <p id="spanOut" class="span-out"></p>
+  </div>
+</section>
+
+<!-- HOLIDAYS -->
+<section id="tab-hol" class="tab">
+  <div class="card hero row between">
+    <div><h2>Holidays</h2><p class="muted small">Word values + date values for the year</p></div>
+    <div class="yearpick"><button id="yPrev" class="btn ghost sq">‹</button><span id="yLbl"></span><button id="yNext" class="btn ghost sq">›</button></div>
+  </div>
+  <div id="holList"></div>
+</section>
+
+<!-- DOTS -->
+<section id="tab-dots" class="tab">
+  <div class="card hero">
+    <div class="row between"><h2>Connect the dots</h2><button id="loadEx" class="link">Thanksgiving example</button></div>
+    <div class="grid2">
+      <div><label class="lbl">Sport</label><select id="sport"><option>NFL</option><option>NCAAF</option><option>NBA</option><option>NCAAB</option><option>WNBA</option><option>MLB</option><option>NHL</option><option>Soccer</option></select></div>
+      <div><label class="lbl">Date</label><input id="gDate" type="date"></div>
+      <div><label class="lbl">Team A (away)</label><input id="tA" type="text" list="teamlist" placeholder="Chicago Bears" autocomplete="off"></div>
+      <div><label class="lbl">Team B (home)</label><input id="tB" type="text" list="teamlist" placeholder="Detroit Lions" autocomplete="off"></div>
+      <div><label class="lbl">Holiday</label><select id="gHol"><option value="">None</option></select></div>
+      <div><label class="lbl">Extra words</label><input id="gExtra" type="text" placeholder="player, city, stadium…" autocomplete="off"></div>
+      <div><label class="lbl">Team A score</label><input id="sA" type="number" inputmode="numeric" placeholder="final"></div>
+      <div><label class="lbl">Team B score</label><input id="sB" type="number" inputmode="numeric" placeholder="final"></div>
+    </div>
+    <div class="seg" id="dotsMode"><button data-m="match" class="on">Match a final</button><button data-m="sim">Simulate</button></div>
+  </div>
+  <div id="dotsOut"></div>
+  <div class="card savebar">
+    <p class="small muted"><span id="pickCount">0</span> number calls picked. Tap any value below to pick it as a call.</p>
+    <button id="saveGame" class="btn primary wide">Save game to Tracker</button>
+  </div>
+</section>
+
+<!-- TRACKER -->
+<section id="tab-track" class="tab">
+  <div class="card hero">
+    <div class="row between"><h2>What wins, what loses</h2><span id="trkSummary" class="pill"></span></div>
+    <div class="seg" id="statMode"><button data-s="cipher" class="on">By cipher</button><button data-s="method">By method</button><button data-s="target">By target</button></div>
+    <div id="stats"></div>
+  </div>
+  <div class="card">
+    <div class="row between"><h2>Add a game</h2><button id="toggleAdd" class="link">Open</button></div>
+    <div id="addForm" class="hidden">
+      <div class="grid2">
+        <div><label class="lbl">Date</label><input id="mDate" type="date"></div>
+        <div><label class="lbl">Sport</label><select id="mSport"><option>NFL</option><option>NCAAF</option><option>NBA</option><option>NCAAB</option><option>WNBA</option><option>MLB</option><option>NHL</option><option>Soccer</option></select></div>
+        <div><label class="lbl">Team A</label><input id="mA" list="teamlist" type="text"></div>
+        <div><label class="lbl">Team B</label><input id="mB" list="teamlist" type="text"></div>
+        <div><label class="lbl">Team A score</label><input id="mSA" type="number" inputmode="numeric" placeholder="later is ok"></div>
+        <div><label class="lbl">Team B score</label><input id="mSB" type="number" inputmode="numeric" placeholder="later is ok"></div>
+      </div>
+      <label class="lbl">Number calls</label>
+      <div id="mCalls"></div>
+      <button id="mAddCall" class="btn ghost">+ Add call</button>
+      <button id="mSave" class="btn primary wide">Save game</button>
+    </div>
+  </div>
+  <div id="games"></div>
+  <div class="card row gap wrap">
+    <button id="expCsv" class="btn ghost">Export CSV</button>
+    <label class="btn ghost">Import CSV<input id="impCsv" type="file" accept=".csv,text/csv" hidden></label>
+  </div>
+</section>
+</main>
+
+<p class="disclaimer">Number patterns for research and fun only. Not predictions.</p>
+<footer class="foot">Built by Ace Apps</footer>
+
+<nav class="tabs">
+  <button data-t="calc" class="on"><span>Aa</span>Calc</button>
+  <button data-t="dates"><span>📅</span>Dates</button>
+  <button data-t="hol"><span>★</span>Holidays</button>
+  <button data-t="dots"><span>⋯</span>Dots</button>
+  <button data-t="track"><span>✓</span>Tracker</button>
+</nav>
+<datalist id="teamlist"></datalist>
+<div id="toast" class="toast"></div>
+<script src="gematria.js"></script>
+<script src="teams.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
